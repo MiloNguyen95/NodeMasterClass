@@ -8,13 +8,14 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
-const config = require('./config');
+const config = require('./lib/config');
 const fs = require('fs');
 const handlers = require('./lib/handlers');
+const helpers = require('./lib/helpers');
 
 // Define the HTTP server
 const httpServer = http.createServer(function (req, res) {
-    unifiedServer(req,res);
+    unifiedServer(req, res);
 });
 
 // Start the HTTP server
@@ -25,11 +26,11 @@ httpServer.listen(config.httpPort, function () {
 // Define the HTTPS server
 var httpsServerOptions = {
     'key': fs.readFileSync('./https/key.pem'),
-    'cert' : fs.readFileSync('./https/cert.pem')
+    'cert': fs.readFileSync('./https/cert.pem')
 };
 
 const httpsServer = https.createServer(httpsServerOptions, function (req, res) {
-    unifiedServer(req,res);
+    unifiedServer(req, res);
 });
 
 // Start the HTTPS server
@@ -73,7 +74,7 @@ var unifiedServer = function (req, res) {
             'queryStringObject': queryStringObject,
             'method': method,
             'headers': headers,
-            'payload': buffer
+            'payload': helpers.parseJsonToObject(buffer)
         };
 
         // Route the request to the handler specifid in the router
