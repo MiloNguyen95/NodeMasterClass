@@ -74,7 +74,7 @@ handlers._users.post = function (data, callback) {
 // Users - get
 // Required data: phone
 // Optional data: none
-// @TODO Only let an authenticated user access their object. Don't let them access anyone data
+// TODO: Only let an authenticated user access their object. Don't let them access anyone data
 handlers._users.get = function (data, callback) {
     // Check that the phone number is valid
     var phone = typeof (data.queryStringObject.phone) == 'string' && data.queryStringObject.phone.trim().length == 10 ? data.queryStringObject.phone.trim() : false;
@@ -97,7 +97,7 @@ handlers._users.get = function (data, callback) {
 // Users - put
 // Required data: phone
 // Optional data: firstName, lastName, password(at least one must be specified)
-// @TODO Only let an authenticated user update their own object. Don't let them update anyone
+// TODO: Only let an authenticated user update their own object. Don't let them update anyone
 handlers._users.put = function (data, callback) {
     // Check for the required field
     var phone = typeof (data.payload.phone) == 'string' && data.payload.phone.trim().length == 10 ? data.payload.phone.trim() : false;
@@ -147,8 +147,30 @@ handlers._users.put = function (data, callback) {
 };
 
 // Users - delete
+// Required field : phone
+// TODO: Only let an authenticated user delete their object. Dont let them delete anyone
+// TODO: Cleanup (delete) any other data files associated with this user
 handlers._users.delete = function (data, callback) {
-
+    // Check that the phone number is valid
+    var phone = typeof (data.queryStringObject.phone) == 'string' && data.queryStringObject.phone.trim().length == 10 ? data.queryStringObject.phone.trim() : false;
+    if (phone) {
+        // Lookup the user
+        _data.read('users', phone, function (err, data) {
+            if (!err && data) {
+                _data.delete('users',phone,function(err){
+                    if(!err){
+                        callback(200);
+                    }else{
+                        callback(500,{'Error': 'Could not delete the specified user'});
+                    }
+                });
+            } else {
+                callback(400, {'Error' : 'Could not find the specified user'});
+            }
+        })
+    } else {
+        callback(400, { 'Error': 'Missing required field' })
+    }
 };
 
 // Ping handler
