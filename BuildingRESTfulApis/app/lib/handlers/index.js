@@ -21,10 +21,14 @@ const getHandler = function (data, callback, handler) {
 };
 
 // Users handler
-handlers.users = getHandler(data, callback, userHandler);
+handlers.users = function(data, callback){
+    getHandler(data, callback, userHandler);
+};
 
 // Tokens handler
-handlers.tokens = getHandler(data, callback, tokenHandler);
+handlers.tokens = function(data, callback){
+    getHandler(data, callback, userHandler);
+};
 
 // Ping handler
 handlers.ping = function (data, callback) {
