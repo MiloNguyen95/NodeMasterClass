@@ -27,7 +27,7 @@ handlers.users = function(data, callback){
 
 // Tokens handler
 handlers.tokens = function(data, callback){
-    getHandler(data, callback, userHandler);
+    getHandler(data, callback, tokenHandler);
 };
 
 // Ping handler
