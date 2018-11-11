@@ -6,7 +6,7 @@
 // Dependencies
 const crypto = require('crypto');
 const config = require('./config');
-
+const data = require('./data');
 // Container for all the helpers;
 var helpers = {};
 
@@ -53,18 +53,22 @@ helpers.createRandomString = function(strLength){
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+// Verify if a given token id is currently valid for a given user
+helpers.verifyToken = function (id, phone, callback) {
+    // Lookup the token
+    data.read('tokens', id, function (err, tokenData) {
+        if (!err && tokenData) {
+            // Check that the token is for the given user and has not expired
+            if (tokenData.phone == phone && tokenData.expires > Date.now()) {
+                callback(true);
+            } else {
+                callback(false);
+            }
+        } else {
+            callback(false);
+        }
+    })
+}
 
 // Export the module
 module.exports = helpers;
