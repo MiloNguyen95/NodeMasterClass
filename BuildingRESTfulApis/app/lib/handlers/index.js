@@ -6,6 +6,7 @@
 // Dependencies
 var userHandler = require('./userHandler'); 
 var tokenHandler = require('./tokenHandler');
+var checkHandler = require('./checkHandler');
 
 // Define the handlers
 var handlers = {};
@@ -28,6 +29,11 @@ handlers.users = function(data, callback){
 // Tokens handler
 handlers.tokens = function(data, callback){
     getHandler(data, callback, tokenHandler);
+};
+
+// Checks handler
+handlers.checks = function(data, callback){
+    getHandler(data, callback, checkHandler);
 };
 
 // Ping handler
